@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>和可记事本</title>
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+        <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+        <script src="https://cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/buttons.css" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <style>
+
+            
+    </style>
+
+</head>
+<body>
+    <div id="notebook"></div>
+    <script type="text/babel">
+// 计划列表
+class NoteMenuList extends React.Component{
+  constructor(props){
+    super(props);
+    this.handleAddNoteClick= this.handleAddNoteClick.bind(this);
+  }
+
+  handleAddNoteClick(){
+    this.props.onAddNoteClick();
+  }
+
+  render(){
+
+    const notelist = this.props.notelist;
+    return(
+      <div id="sidebar_scorerank" className="sidebar-block">
+            <div className="catListBlogRank">
+              <h3 className="catListTitle">近期计划&nbsp;&nbsp;&nbsp;&nbsp;
+                <button className="button button-circle button-tiny" onClick={()=>this.handleAddNoteClick()}>+</button>
+              </h3>
+              <ul>
+              {notelist}
+              </ul>
+            </div>
+          </div>
+    );
+  }
+}
+//搜索框
+class NoteSearch extends React.Component{
+  constructor(props){
+    super(props);
+    this.onSearchNoteClick = this.onSearchNoteClick.bind(this);
+    this.onNoteInputChange = this.onNoteInputChange.bind(this);
+  }
+
+  onNoteInputChange(e){
+    this.props.onNoteInputChange(e);
+  }
+
+  onSearchNoteClick(){
+    this.props.onSearchNoteClick();
+  }
+
+  render(){
+    return(
+      <div className="search">
+        <input type="text" placeholder="请输入..." name="search" onChange={this.onNoteInputChange}/>
+        <button onClick={this.onSearchNoteClick}><i>搜索</i></button>
+      </div>
+    );
+  }
+}
+
+//左边栏目
+class NoteSideBar extends React.Component{
+    render(){
+      const notelist = this.props.notelist;
+      const onAddNoteClick = this.props.onAddNoteClick;
+      const onSearchNoteClick = this.props.onSearchNoteClick;
+      const onNoteInputChange = this.props.onNoteInputChange;
+      return(
+        <div id="sideBar">
+          <NoteSearch onSearchNoteClick={onSearchNoteClick} onNoteInputChange={onNoteInputChange} />
+          <NoteMenuList notelist={notelist} onAddNoteClick={onAddNoteClick} />
+        </div>
+      )
+    }
+}
+
+// 不同类型计划项
+class NoteList extends React.Component{
+    constructor(props){
+      super(props);
+      this.onNoteInputChange = this.onNoteInputChange.bind(this);
+      this.onNoteItemChange = this.onNoteItemChange.bind(this);
+    }
+    onNoteInputChange(e){
+      this.props.onNoteInputChange(e);
+    }
+    onNoteItemChange(e){
+
+      const finished = e.target.checked==true?1:0;
+      this.props.onNoteItemChange(e.target.value, finished);
+    }
+    render(){
+      const headTitles = ["重要且紧急","紧急不重要","重要不紧急","不重要不紧急"];
+      const content = this.props.content;
+      const type = this.props.type;
+      const note_id= this.props.note_id;
+      return (
+        <div className="notepad group">
+            <div className="notepad-heading">
+                <h1>{headTitles[this.props.type]}</h1>
+            </div>
+            {
+              content.map(function(item,index){
+                //if(item.type===this.props.type){ //这里直接使用this.props.type会报错，找不到props
+                //if(item.type===type){
+                    return (
+                        <p key={note_id+"-" +item.id + item.content}>
+                        <input name={"item_check"+(type+1) + "" +(index+1)} type="checkbox" defaultChecked={item.finished} value={item.id} itemID={item.id} onChange={this.onNoteItemChange} />
+                        <input name={"item_input"+(type+1) + "" +(index+1)} type="text" placeholder="" ref="" className="note-input" defaultValue={item.content} onChange={this.onNoteInputChange} />
+                        </p>
+                    );
+                //}
+              },this)
+            }
+        </div>
+      );
+    }
+}
+// 查看计划
+class DayNote extends React.Component {
+  constructor(props)
+  {
+    super(props);
+    this.onNoteSubmit = this.onNoteSubmit.bind(this);
+  }
+
+  onNoteSubmit(){
+    this.props.onNoteSubmit();
+  }
+ 
+  render() {
+      const note_id = this.props.note_id;
+      const note_items1 = this.props.note_items1;
+      const note_items2 = this.props.note_items2;
+      const note_items3 = this.props.note_items3;
+      const note_items4 = this.props.note_items4;
+      const onNoteInputChange = this.props.onNoteInputChange;
+      const onNoteSubmit = this.props.onNoteSubmit;
+      const isAddingNote = this.props.isAddingNote;
+      const onNoteItemChange=this.props.onNoteItemChange;
+      return (
+      <div className="notelist">
+        <NoteList note_id={note_id} content={note_items1} type={0} onNoteInputChange={onNoteInputChange} onNoteItemChange={onNoteItemChange} />
+        <NoteList note_id={note_id} content={note_items2} type={1} onNoteInputChange={onNoteInputChange} onNoteItemChange={onNoteItemChange} />
+        <NoteList note_id={note_id} content={note_items3} type={2} onNoteInputChange={onNoteInputChange} onNoteItemChange={onNoteItemChange} />
+        <NoteList note_id={note_id} content={note_items4} type={3} onNoteInputChange={onNoteInputChange} onNoteItemChange={onNoteItemChange} />
+        {isAddingNote&&<div className="note-submit"><button className="button button-primary button-pill button-small" onClick={this.onNoteSubmit}>提交计划</button></div>}
+    </div>
+    );
+  }
+}
+
+// 记事本顶层组件
+class NoteBook extends React.Component{
+  constructor(props) {
+      super(props);
+      this.state = {
+        isAddingNote:false,
+        search:'',
+        note_datas:[],
+        note_key: 0,
+        note_id: 0,
+        note_name: '',
+        note_items1:[], //重要且紧急
+        note_items2:[], //紧急不重要
+        note_items3:[], //重要不紧急
+        note_items4:[], //不重要不紧急
+        notebook: [],
+        item_input11:'',
+        item_input12:'',
+        item_input13:'',
+        item_input14:'',
+        item_input21:'',
+        item_input22:'',
+        item_input23:'',
+        item_input24:'',
+        item_input31:'',
+        item_input32:'',
+        item_input33:'',
+        item_input34:'',
+        item_input41:'',
+        item_input42:'',
+        item_input43:'',
+        item_input44:'',
+      };
+
+      this.handleNoteClick = this.handleNoteClick.bind(this);
+      this.handleAddNoteClick = this.handleAddNoteClick.bind(this);
+      this.onNoteInputchange = this.onNoteInputchange.bind(this);
+      this.handleNoteSubmit = this.handleNoteSubmit.bind(this);
+      this.handleDeleteNote = this.handleDeleteNote.bind(this);
+      this.handleUpdateNoteItem = this.handleUpdateNoteItem.bind(this);
+      this.handleSearchNote = this.handleSearchNote.bind(this);
+  }
+
+  // 输入框值变化
+  onNoteInputchange(e){
+    this.setState({
+      [e.target.name]:e.target.value,
+    });
+  }
+
+  //初始化，获取所有计划及最后一个计划的所有计划项
+  componentDidMount() {
+  	// jQuery $.get() 方法
+  	/*
+    this.serverRequest = $.get(this.props.source, function (result) {
+      var user_name = '';
+      this.setState({
+        username: user_name,
+        content: JSON.parse(result)
+      });
+    }.bind(this));
+    */
+    // jQuery $.post() 方法
+    this.serverRequest = $.post(this.props.source,{category:"Note", method:"GetNoteList", data:JSON.stringify({note_name:''})}, function (result) {
+      var notebook_datas = JSON.parse(result);
+      var count = 0;
+      for (var note in  notebook_datas) {
+        if(count==0)
+        {
+          notebook_datas[count]['loaded'] = true;
+        }
+        else
+        {
+          notebook_datas[count]['loaded'] = false;
+        }
+        count++;
+      }
+      if(count > 0){
+        this.setState({
+          note_datas: notebook_datas,
+          note_id: notebook_datas[this.state.note_key].note_id,
+          note_name: notebook_datas[this.state.note_key].note_name,
+          note_items1: notebook_datas[this.state.note_key].note_items1,
+          note_items2: notebook_datas[this.state.note_key].note_items2,
+          note_items3: notebook_datas[this.state.note_key].note_items3,
+          note_items4: notebook_datas[this.state.note_key].note_items4
+        });
+      }
+
+    }.bind(this));
+
+
+  }
+ 
+  componentWillUnmount() {
+    this.serverRequest.abort();
+  }
+
+  // 点击不同计划
+  handleNoteClick(index){
+    var count = 0;
+    for (var note in  this.state.note_datas) {
+        count++;
+    }
+    const note_id = this.state.note_datas[index].note_id;
+    if(this.state.note_datas[index].loaded===false) //未加载则通过ajax加载
+    {
+      this.serverRequest = $.post(this.props.source,{category:"Note", method:"GetNoteItems", data:JSON.stringify({note_id:note_id})}, function (result) {
+        var note_items = JSON.parse(result);
+        var note_datas = this.state.note_datas;
+        note_datas[index]['note_items1'] = note_items.note_items1;
+        note_datas[index]['note_items2'] = note_items.note_items2;
+        note_datas[index]['note_items3'] = note_items.note_items3;
+        note_datas[index]['note_items4'] = note_items.note_items4;
+        note_datas[index]['loaded'] = true;
+        this.setState({
+          isAddingNote:false,
+          note_datas: note_datas,
+          note_key:index,
+          note_id: note_datas[index].note_id,
+          note_name: note_datas[index].note_name,
+          note_items1: note_datas[index].note_items1,
+          note_items2: note_datas[index].note_items2,
+          note_items3: note_datas[index].note_items3,
+          note_items4: note_datas[index].note_items4
+        });
+
+      }.bind(this));
+
+    }
+    else
+    {
+      this.setState({
+            isAddingNote:false,
+            note_key:index,
+            note_id: this.state.note_datas[index].note_id,
+            note_name: this.state.note_datas[index].note_name,
+            note_items1: this.state.note_datas[index].note_items1,
+            note_items2: this.state.note_datas[index].note_items2,
+            note_items3: this.state.note_datas[index].note_items3,
+            note_items4: this.state.note_datas[index].note_items4
+          });
+    }
+  }
+
+  // 点击添加计划按钮
+  handleAddNoteClick(){
+    var count =0;
+    const note_items1 = [];
+    const note_items2 = []; 
+    const note_items3 = [];
+    const note_items4 = []; 
+    for (var note in  this.state.note_datas) {
+      count++;
+    }
+    var num = 0;
+    for(var i = 0;i<4;i++)
+    {
+      note_items1[i] = {id:num,content:""};
+      num++;
+      note_items2[i] = {id:num,content:""};
+      num++;
+      note_items3[i] = {id:num,content:""};
+      num++;
+      note_items4[i] = {id:num,content:""};
+      num++;
+    }
+    const note_id = count===0?0:this.state.note_datas[count-1].note_id+1;
+    this.setState({
+      isAddingNote:true,
+      note_key:count,
+      note_id:note_id,
+      note_name: this.getCurrentDate(),
+      note_items1: note_items1,
+      note_items2: note_items2,
+      note_items3: note_items3,
+      note_items4: note_items4
+    });
+  }
+
+  // 提交计划
+  handleNoteSubmit(){
+    var datas = [];
+  
+    if(this.state.item_input11!=="")
+    {
+      datas = [...datas,{type:0, content:this.state.item_input11}];
+    }
+    if(this.state.item_input12!=="")
+    {
+      datas = [...datas,{type:0, content:this.state.item_input12}];
+    }
+    if(this.state.item_input13!=="")
+    {
+      datas = [...datas,{type:0, content:this.state.item_input13}];
+    }
+    if(this.state.item_input14!=="")
+    {
+      datas = [...datas,{type:0, content:this.state.item_input14}];
+    }
+    if(this.state.item_input21!=="")
+    {
+      datas = [...datas,{type:1, content:this.state.item_input21}];
+    }
+    if(this.state.item_input22!=="")
+    {
+      datas = [...datas,{type:1, content:this.state.item_input22}];
+    }
+    if(this.state.item_input23!=="")
+    {
+      datas = [...datas,{type:1, content:this.state.item_input23}];
+    }
+    if(this.state.item_input24!=="")
+    {
+      datas = [...datas,{type:1, content:this.state.item_input24}];
+    }
+    if(this.state.item_input31!=="")
+    {
+      datas = [...datas,{type:2, content:this.state.item_input31}];
+    }
+    if(this.state.item_input32!=="")
+    {
+      datas = [...datas,{type:2, content:this.state.item_input32}];
+    }
+    if(this.state.item_input33!=="")
+    {
+      datas = [...datas,{type:2, content:this.state.item_input33}];
+    }
+    if(this.state.item_input34!=="")
+    {
+      datas = [...datas,{type:2, content:this.state.item_input34}];
+    }
+    if(this.state.item_input41!=="")
+    {
+      datas = [...datas,{type:3, content:this.state.item_input41}];
+    }
+    if(this.state.item_input42!=="")
+    {
+      datas = [...datas,{type:3, content:this.state.item_input42}];
+    }
+    if(this.state.item_input43!=="")
+    {
+      datas = [...datas,{type:3, content:this.state.item_input43}];
+    }
+    if(this.state.item_input44!=="")
+    {
+      datas = [...datas,{type:3, content:this.state.item_input44}];
+    }
+    //alert(JSON.stringify({note_items:datas}));
+
+    // 提交计划
+    this.serverRequest = $.post(this.props.source,{category:"Note", method:"AddNoteBook", data:JSON.stringify({note_items:datas})}, function (result) {
+      //alert(result);
+      var notebook_datas = JSON.parse(result);
+      var count = 0;
+      for (var note in  notebook_datas) {
+        if(count==0)
+        {
+          notebook_datas[count]['loaded'] = true;
+        }
+        else
+        {
+          notebook_datas[count]['loaded'] = false;
+        }
+        count++;
+      }
+    	this.setState({
+        note_datas: notebook_datas,
+        isAddingNote:false,
+        note_key:0,
+        note_id: notebook_datas[0].note_id,
+        note_name: notebook_datas[0].note_name,
+        note_items1: notebook_datas[0].note_items1,
+        note_items2: notebook_datas[0].note_items2,
+        note_items3: notebook_datas[0].note_items3,
+        note_items4: notebook_datas[0].note_items4
+      });
+    }.bind(this));
+  }
+
+  getCurrentDate(){
+    var date = new Date();
+ 
+    var year = date.getFullYear().toString();
+    var month = (date.getMonth()+1).toString();
+    var day = date.getDate().toString();
+    //var hour =  date.getHours().toString();
+    //var minute = date.getMinutes().toString();
+    //return year+'年'+month+'月'+day+'日'+' '+hour+':'+minute;
+    return year+'-'+month+'-'+day;
+  }
+
+  //删除计划
+  handleDeleteNote(note_id, index){
+    this.serverRequest = $.post(this.props.source,{category:"Note", method:"DeleteNoteBook", data:JSON.stringify({note_id:note_id})}, function (result) {
+      //alert(result);
+      var notebook_datas = this.state.note_datas;
+      notebook_datas.splice(index,1);
+      var count = 0;
+      for (var note in  notebook_datas) {
+        count++;
+      }
+      
+      if(count > 0){
+        //const note_key = (this.state.note_key===index)?(index===0?0:index-1):this.state.note_key;
+        //alert(notebook_datas[0].note_id + " " +notebook_datas[1].note_id);
+        this.setState({
+          note_datas: notebook_datas,
+          isAddingNote:false,
+          note_key: 0,
+          //note_id: notebook_datas[0].note_id,
+          //note_name: notebook_datas[0].note_name,
+          //note_items1: notebook_datas[0].note_items1,
+          //note_items2: notebook_datas[0].note_items2,
+          //note_items3: notebook_datas[0].note_items3,
+          //note_items4: notebook_datas[0].note_items4
+        });
+        this.handleNoteClick(this.state.note_key);
+      }
+      else
+      {
+        //alert("empty");
+        this.setState({
+          note_datas:[],
+          note_key: 0,
+          note_id: 0,
+          note_name: "",
+          note_items1: [],
+          note_items2: [],
+          note_items3: [],
+          note_items4: []
+        });
+      }
+    }.bind(this))
+  }
+
+  // 更新计划状态
+  handleUpdateNoteItem(id, finished){
+    if(!this.state.isAddingNote)
+    {
+      this.serverRequest = $.post(this.props.source,{category:"Note", method:"UpdateNoteItem", data:JSON.stringify({id:id,finished:finished})}, function (result) {
+        //alert(result);
+        var notebook_datas = this.state.note_datas;
+        notebook_datas[this.state.note_key]['loaded'] = false; //设置重新加载
+        this.setState({
+          note_datas:notebook_datas,
+        });
+
+      }.bind(this))
+    }
+    
+  }
+
+  // 搜索计划
+  handleSearchNote(){
+    this.serverRequest = $.post(this.props.source,{category:"Note", method:"GetNoteList", data:JSON.stringify({note_name:this.state.search})}, function (result) {
+        //alert(result);
+      var notebook_datas = JSON.parse(result);
+      var count = 0;
+      for (var note in  notebook_datas) {
+        if(count==0)
+        {
+          notebook_datas[count]['loaded'] = true;
+        }
+        else
+        {
+          notebook_datas[count]['loaded'] = false;
+        }
+        count++;
+      }
+      if(count > 0){
+        this.setState({
+          note_datas: notebook_datas,
+          note_id: notebook_datas[this.state.note_key].note_id,
+          note_name: notebook_datas[this.state.note_key].note_name,
+          note_items1: notebook_datas[this.state.note_key].note_items1,
+          note_items2: notebook_datas[this.state.note_key].note_items2,
+          note_items3: notebook_datas[this.state.note_key].note_items3,
+          note_items4: notebook_datas[this.state.note_key].note_items4
+        });
+      }
+
+    }.bind(this))
+  }
+
+  render(){
+    //const note_key = this.state.note_key;
+    const notelist = this.state.note_datas.map((val,index)=>
+      <li key={val.note_id} className="liScore">
+        <a href="#" className={this.state.note_key==index?"note-select":"note-normal"} onClick={()=>this.handleNoteClick(index)}>{val.note_name}</a>
+        <button className="button button-circle button-tiny" onClick={()=>this.handleDeleteNote(val.note_id, index)}>-</button>
+      </li> 
+    );
+    return (
+      <div>
+        <div className="menu-container" >
+          <h2 align="center">{this.state.note_name}计划</h2>
+        </div>
+        <div id="note">
+          <DayNote 
+          note_id={this.state.note_id} 
+          note_items1={this.state.note_items1} 
+          note_items2={this.state.note_items2} 
+          note_items3={this.state.note_items3} 
+          note_items4={this.state.note_items4}
+          onNoteInputChange={this.onNoteInputchange}
+          onNoteItemChange={this.handleUpdateNoteItem}
+          onNoteSubmit={this.handleNoteSubmit}
+          isAddingNote={this.state.isAddingNote}
+          />
+        </div>
+        <NoteSideBar notelist={notelist} onAddNoteClick={()=>this.handleAddNoteClick()} onNoteInputChange={this.onNoteInputchange}  onSearchNoteClick={this.handleSearchNote}/>
+      </div>
+    );
+  }
+}
+
+
+ 
+ReactDOM.render(
+  <NoteBook  source="http://localhost/hknotebook/game.php"  />,
+  document.getElementById('notebook')
+);
+</script>
+
+
+</body>
+

@@ -1,0 +1,206 @@
+body {  color: #4f4f4f;  background: #3782b0;}/* Note: I didn't use borders because WebKit extends shadows underneath them, creating inconsistencies with other browsers. When the border is semi-transparent, as this snippet requires, it appears darker because of the shadow underneath it. */
+.notepad, .notepad:before, .notepad:after {  background-color: white;  background-image: -webkit-linear-gradient(#f6abca 1px, transparent 1px), -webkit-linear-gradient(#f6abca 1px, transparent 1px), -webkit-linear-gradient(#e8e8e8 1px, transparent 1px);  background-image: -moz-linear-gradient(#f6abca 1px, transparent 1px), -moz-linear-gradient(#f6abca 1px, transparent 1px), -moz-linear-gradient(#e8e8e8 1px, transparent 1px);  background-image: -o-linear-gradient(#f6abca 1px, transparent 1px), -o-linear-gradient(#f6abca 1px, transparent 1px), -o-linear-gradient(#e8e8e8 1px, transparent 1px);  background-image: linear-gradient(#f6abca 1px, transparent 1px), linear-gradient(#f6abca 1px, transparent 1px), linear-gradient(#e8e8e8 1px, transparent 1px);  background-size: 1px 1px, 1px 1px, 23px 28px;  background-repeat: repeat-y, repeat-y, repeat;  background-position: 32px 0, 33px 0, 0 50px;  border-radius: 2px;  -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15), 0 0 4px rgba(0, 0, 0, 0.5);  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15), 0 0 4px rgba(0, 0, 0, 0.5);}
+.notepad {  position: relative;  margin: 30px auto;  padding: 0 23px 14px 8px;  width: 550px;  line-height: 22px;  font-size: 16px;  color: #666;}
+.notepad p, .notepad blockquote {  margin-bottom: -10px;}
+.notepad :last-child {  margin-bottom: 0;}
+.notepad:before, .notepad:after {  content: '';  position: absolute;  z-index: -1;  top: 100%;  left: 3px;  right: 3px;  margin-top: -2px;  height: 4px;  background-size: 1px 1px, 1px 1px, 0 0;}
+.notepad:before {  z-index: -2;  left: 6px;  right: 6px;  height: 6px;  background-color: #eee;}
+.notepad-heading {  position: relative;  margin: 0 -23px 14px -8px;  height: 38px;  background: #14466a;  border-radius: 2px 2px 0 0;  background-image: -webkit-linear-gradient(top, #226797, #0c3452);  background-image: -moz-linear-gradient(top, #226797, #0c3452);  background-image: -o-linear-gradient(top, #226797, #0c3452);  background-image: linear-gradient(to bottom, #226797, #0c3452);  -webkit-box-shadow: inset 0 1px #2f81ad, 0 2px 1px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.5), 0 1px black;  box-shadow: inset 0 1px #2f81ad, 0 2px 1px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.5), 0 1px black;}
+.notepad-heading >h1 {  line-height: 36px;  font-size: 14px;  color: white;  text-align: center;  text-shadow: 0 -1px rgba(0, 0, 0, 0.7);}
+.notepad-heading:before, .notepad-heading:after {  content: '';  position: absolute;  bottom: 2px;  left: 1px;  right: 1px;  height: 0;  border-top: 1px dashed #617c90;  border-color: rgba(255, 255, 255, 0.35);}
+.notepad-heading:after {  bottom: 3px;  border-color: #071c2c;  border-color: rgba(0, 0, 0, 0.5);}
+.group p 			  {font-family: Arial, Sans-Serif;}
+.group p em 		  {font-family: Arial, Sans-Serif; font-style:normal; font-weight:normal;}
+.group p strong 	  {font-family: Arial, Sans-Serif; font-style:normal; font-weight:normal;}
+.group p em strong  {font-family: Arial, Sans-Serif; font-style:normal; font-weight:normal;}
+h1 {font-family:Open Sans, Arial, Sans-Serif; !important }
+input[type="checkbox"] {
+text-indent:0;
+margin: 0;
+margin-top:-5px;
+margin-right:15px;
+width: 17px;
+height: 17px;
+text-align:center;
+display: inline-block;
+vertical-align: middle;
+line-height: 15px;
+position: relative;
+}
+
+input[type="checkbox"]::before {
+content: "";
+position: absolute;
+top: 0;
+left: 0;
+background: #fff;
+width: 100%;
+height: 100%;
+border: 1px solid #bdbfc2;
+}
+input[type="checkbox"]:checked::before {
+content: "\2713";
+background-color: #37b048;
+color: #fff;
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+font-size: 12px;
+font-weight: bold;
+outline: none;
+border-color:#ccc;
+border: 1px solid #bdbfc2;
+}
+
+.menu-container{
+
+	margin-bottom: 10px;
+}
+
+.menu-container h2{
+	color: white;
+}
+
+
+#note{
+	border: 3px white solid;
+	margin:0 auto;
+	position: relative
+}
+.notelist {
+	border: 1px white solid;
+	position:absolute;
+	left: 0;
+	right: 0;
+	top:0;
+	bottom:0;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top:auto;
+	margin-bottom:auto;
+}
+
+#sideBar {
+	width: 200px;
+	margin-top:5px;
+    margin-left: 0px;
+    float: left;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: visible;
+    word-break: break-all;
+}
+
+.sidebar-block {
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+.sidebar-block ul  {
+    border: 1px solid #dedede;
+    border-top: none;
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+	margin-inline-end: 0px;
+	padding-inline-start: 0px;
+	margin: 0px auto;
+}
+
+#sideBar li {
+    list-style: none;
+}
+.sidebar-block ul li {
+	line-height: 2;
+	height: 30px;
+    border-bottom: 1px solid #e9e9e9;
+    padding: 5px 20px 5px 20px;
+    font-size: 14px;
+	color: #777;
+}
+.sidebar-block ul li button{
+	font-size: 24px;
+}
+.sidebar-block h3 {
+	margin: 0px;
+    background-color: #169fe6;
+    border: 1px solid #169fe6;
+	color: #fff;
+    font-size: 18px;
+    font-weight: normal;
+	padding: 10px 20px 10px 20px;
+	margin-top: 10px;
+}
+
+.sidebar-block h3 button{
+	font-size: 24px;
+}
+
+.note-select{
+	margin-right:5px;
+	text-decoration: none;
+	color: #169fe6;
+	font-size: 16px;
+}
+
+.note-normal {
+	margin-right:20px;
+	text-decoration: none;
+	color: #777;
+	font-size: 14px;
+}
+
+.search{
+	width: 200px;            
+	margin: 0px auto;
+	display: flex;
+	/*border: 1px solid red;*/
+}
+.search input{
+	width: 160px;
+	float: left;
+	flex: 4;
+	height: 30px;
+	outline: none;
+	border: 1px solid #169fe6;
+	box-sizing: border-box;
+}
+.search button{
+	width:40px;
+	float: right;
+	flex: 1;
+	height: 30px;
+	background-color: #169fe6;
+	color: white;
+	border-style: none;
+	outline: none;
+}
+.search button i{
+	font-style: normal;
+}
+.search button:hover{
+	font-size: 14px;
+}
+
+.note-input{
+	width:500px;
+	outline-color: invert ;
+	outline-style: none ;
+	outline-width: 0px ;
+	border: none ;
+	border-style: none ;
+	text-shadow: none ;
+	-webkit-appearance: none ;
+	-webkit-user-select: text ;
+	outline-color: transparent ;
+	box-shadow: none;
+
+}
+
+.note-submit{
+	margin: 0px auto;
+	text-align: center;
+}
